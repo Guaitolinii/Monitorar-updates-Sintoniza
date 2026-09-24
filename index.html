@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Últimos Lançamentos - Filmes e Séries IPTV</title>
+  <meta name="description" content="Acompanhe os últimos filmes e séries adicionados à sua lista IPTV com data exata de inclusão e detalhes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #090a10;
+      --bg-card: rgba(22, 24, 38, 0.7);
+      --bg-card-hover: rgba(30, 34, 54, 0.9);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(139, 92, 246, 0.5);
+      --primary: #8b5cf6;
+      --primary-glow: rgba(139, 92, 246, 0.35);
+      --secondary: #06b6d4;
+      --secondary-glow: rgba(6, 182, 212, 0.3);
+      --accent: #ec4899;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --star-color: #facc15;
+      --badge-movie: #0284c7;
+      --badge-series: #7c3aed;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 15%, rgba(139, 92, 246, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 90% 75%, rgba(6, 182, 212, 0.09) 0%, transparent 45%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 60px;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    header {
+      padding: 32px 0 24px 0;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      background: rgba(9, 10, 16, 0.85);
+      backdrop-filter: blur(20px);
+      z-index: 100;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    .brand-icon svg {
+      width: 24px;
+      height: 24px;
+      fill: #fff;
+    }
+
+    .brand-title h1 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-title p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      display: inline-block;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.9); }
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-sync {
+      background: linear-gradient(135deg, #7c3aed, #6366f1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 30px;
+      padding: 10px 22px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      transition: var(--transition);
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    .btn-sync:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5);
+    }
+
+    .btn-sync:active {
+      transform: translateY(0);
+    }
+
+    .btn-sync svg {
+      width: 17px;
+      height: 17px;
+      transition: transform 0.5s ease;
+    }
+
+    .btn-sync.spinning svg {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Stats Overview Banner */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 32px 0 24px 0;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      border-color: rgba(255, 255, 255, 0.16);
+      transform: translateY(-2px);
+    }
+
+    .stat-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-icon.movies {
+      background: rgba(2, 132, 199, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(2, 132, 199, 0.3);
+    }
+
+    .stat-icon.series {
+      background: rgba(124, 58, 237, 0.15);
+      color: #a78bfa;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+    }
+
+    .stat-icon.time {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .stat-info .stat-value {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .stat-info .stat-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Filters and Search */
+    .controls-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 18px 22px;
+      margin-bottom: 32px;
+      backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .controls-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* Tabs */
+    .tabs-group {
+      display: flex;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 4px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 9px 20px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: inherit;
+      border-radius: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--primary), #6366f1);
+      color: #fff;
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    .tab-badge {
+      background: rgba(255, 255, 255, 0.2);
+      font-size: 0.75rem;
+      padding: 2px 7px;
+      border-radius: 12px;
+    }
+
+    /* Search & Sort */
+    .search-sort-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      flex: 1;
+      max-width: 600px;
+      justify-content: flex-end;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .search-box svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 17px;
+      height: 17px;
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-color);
+      border-radius: 30px;
+      padding: 10px 16px 10px 42px;
+      color: #fff;
+      font-size: 0.88rem;
+      font-family: inherit;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .search-input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 14px var(--primary-glow);
+    }
+
+    .sort-select {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-color);
+      border-radius: 30px;
+      padding: 10px 20px;
+      color: #fff;
+      font-size: 0.88rem;
+      font-family: inherit;
+      outline: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .sort-select:focus {
+      border-color: var(--border-focus);
+    }
+
+    .sort-select option {
+      background: #111422;
+      color: #fff;
+    }
+
+    /* Quick genres list */
+    .genres-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
+    }
+
+    .genre-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .genre-chip:hover, .genre-chip.active {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    /* Section Title */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-header h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .results-count {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Grid of Cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 22px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      cursor: pointer;
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      background: var(--bg-card-hover);
+      border-color: rgba(139, 92, 246, 0.4);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.15);
+    }
+
+    .poster-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      background: #111420;
+      overflow: hidden;
+    }
+
+    .poster-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .card:hover .poster-img {
+      transform: scale(1.05);
+    }
+
+    .poster-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      padding: 16px;
+      text-align: center;
+      font-size: 0.8rem;
+      background: linear-gradient(180deg, #16192b, #0b0c14);
+    }
+
+    .poster-placeholder svg {
+      width: 44px;
+      height: 44px;
+      margin-bottom: 8px;
+      opacity: 0.4;
+    }
+
+    .badge-type {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+    }
+
+    .badge-type.movie {
+      background: rgba(2, 132, 199, 0.85);
+      color: #fff;
+    }
+
+    .badge-type.series {
+      background: rgba(124, 58, 237, 0.85);
+      color: #fff;
+    }
+
+    .badge-rating {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(0, 0, 0, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--star-color);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      backdrop-filter: blur(8px);
+    }
+
+    .badge-new {
+      position: absolute;
+      top: 42px;
+      right: 12px;
+      background: linear-gradient(135deg, #ef4444, #f97316);
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
+      z-index: 2;
+    }
+
+    /* Date Added Badge */
+    .date-badge {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(9, 10, 16, 0.95) 0%, rgba(9, 10, 16, 0.6) 80%, transparent 100%);
+      padding: 24px 12px 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #38bdf8;
+    }
+
+    .date-badge svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    .card-content {
+      padding: 14px 14px 16px 14px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.35;
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      margin-top: auto;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .genre-tag {
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Empty state */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--bg-card);
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius-lg);
+    }
+
+    .empty-state svg {
+      width: 60px;
+      height: 60px;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+    }
+
+    .empty-state h3 {
+      font-size: 1.2rem;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .empty-state p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Modal Details */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-container {
+      background: #131625;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-lg);
+      max-width: 800px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.8), 0 0 40px rgba(139, 92, 246, 0.2);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 36px;
+      height: 36px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      z-index: 10;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.1);
+    }
+
+    .modal-body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (min-width: 700px) {
+      .modal-body {
+        flex-direction: row;
+      }
+    }
+
+    .modal-poster-wrap {
+      flex: 0 0 280px;
+      background: #090a10;
+      position: relative;
+    }
+
+    .modal-poster-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      min-height: 380px;
+    }
+
+    .modal-info {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .modal-header-badges {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .modal-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.25;
+    }
+
+    .modal-addition-date {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      color: #38bdf8;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .modal-plot {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    .modal-details-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 14px 0;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.85rem;
+    }
+
+    .detail-item span {
+      color: var(--text-dim);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .detail-item strong {
+      color: #fff;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e2238;
+      color: #fff;
+      border: 1px solid var(--border-color);
+      padding: 14px 20px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 2000;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: var(--transition);
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .toast.success {
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    .toast.error {
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container header-content">
+      <a href="#" class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 6.47L5.76 10H20v8H4V6.47M22 4h-4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4z"/>
+          </svg>
+        </div>
+        <div class="brand-title">
+          <h1>Últimos Lançamentos IPTV</h1>
+          <p><span class="status-dot"></span> Conectado: dbonline.tech-cdn.top</p>
+        </div>
+      </a>
+
+      <div class="header-actions">
+        <button id="btnSync" class="btn-sync" title="Consultar novos títulos diretamente do servidor">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+          <span id="syncText">Sincronizar Servidor</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Stat Overview -->
+    <section class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-icon movies">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value" id="statMoviesTotal">30.203</div>
+          <div class="stat-label">Total Filmes no Catálogo</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon series">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value" id="statSeriesTotal">8.426</div>
+          <div class="stat-label">Total Séries no Catálogo</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon time">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value" id="statLatestDate" style="font-size: 1.15rem;">Carregando...</div>
+          <div class="stat-label">Última Inclusão no Servidor</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(236, 72, 153, 0.15); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.3);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14h2v2h-2zm0-10h2v8h-2z"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value" id="statLastSync" style="font-size: 1.15rem;">--</div>
+          <div class="stat-label">Checagem Automática Online</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Controls (Tabs, Search, Sort) -->
+    <section class="controls-wrapper">
+      <div class="controls-top">
+        <div class="tabs-group">
+          <button class="tab-btn active" data-filter="all">
+            Todos <span class="tab-badge" id="badgeAll">0</span>
+          </button>
+          <button class="tab-btn" data-filter="movie">
+            🎬 Filmes <span class="tab-badge" id="badgeMovies">0</span>
+          </button>
+          <button class="tab-btn" data-filter="series">
+            📺 Séries <span class="tab-badge" id="badgeSeries">0</span>
+          </button>
+        </div>
+
+        <div class="search-sort-group">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="searchInput" class="search-input" placeholder="Buscar por título, gênero ou data...">
+          </div>
+
+          <select id="sortSelect" class="sort-select">
+            <option value="date-desc">Adicionados Recentemente</option>
+            <option value="date-asc">Mais Antigos Primeiro</option>
+            <option value="rating-desc">Melhor Avaliação</option>
+            <option value="title-asc">Título (A-Z)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Quick Genre Filter -->
+      <div class="genres-bar" id="genresBar">
+        <button class="genre-chip active" data-genre="">Todos os Gêneros</button>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <div class="section-header">
+      <h2>
+        <span>Títulos Mais Recentes</span>
+      </h2>
+      <div class="results-count" id="resultsCount">Exibindo 0 títulos</div>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid" id="itemsGrid">
+      <!-- Cards rendered via JS -->
+    </div>
+  </main>
+
+  <!-- Modal Details -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-container">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <div class="modal-body">
+        <div class="modal-poster-wrap">
+          <img id="modalPoster" src="" alt="Poster">
+        </div>
+        <div class="modal-info">
+          <div class="modal-header-badges">
+            <span id="modalTypeBadge" class="badge-type movie">Filme</span>
+            <span id="modalRatingBadge" class="badge-rating">⭐ 0.0</span>
+            <span id="modalYear" style="color: var(--text-dim); font-weight: 600; font-size: 0.9rem;"></span>
+          </div>
+
+          <h3 id="modalTitle" class="modal-title">Título do Conteúdo</h3>
+
+          <div class="modal-addition-date">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/>
+            </svg>
+            <span>Adicionado em: <strong id="modalDate">--</strong></span>
+          </div>
+
+          <p id="modalPlot" class="modal-plot">Sinopse não disponível.</p>
+
+          <div class="modal-details-grid">
+            <div class="detail-item">
+              <span>Gênero</span>
+              <strong id="modalGenre">N/A</strong>
+            </div>
+            <div class="detail-item">
+              <span>Duração / Info</span>
+              <strong id="modalDuration">N/A</strong>
+            </div>
+            <div class="detail-item">
+              <span>Data de Lançamento</span>
+              <strong id="modalRelease">N/A</strong>
+            </div>
+            <div class="detail-item">
+              <span>ID no Servidor</span>
+              <strong id="modalId">--</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Initial Fallback Data Script -->
+  <script src="data.js"></script>
+
+  <script>
+    // App State
+    let allItems = [];
+    let activeFilter = 'all';
+    let activeGenre = '';
+    let searchQuery = '';
+    let activeSort = 'date-desc';
+
+    // DOM Elements
+    const itemsGrid = document.getElementById('itemsGrid');
+    const searchInput = document.getElementById('searchInput');
+    const sortSelect = document.getElementById('sortSelect');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const genresBar = document.getElementById('genresBar');
+    const resultsCount = document.getElementById('resultsCount');
+    const btnSync = document.getElementById('btnSync');
+    const syncText = document.getElementById('syncText');
+    const statLatestDate = document.getElementById('statLatestDate');
+    const statMoviesTotal = document.getElementById('statMoviesTotal');
+    const statSeriesTotal = document.getElementById('statSeriesTotal');
+
+    // Badges
+    const badgeAll = document.getElementById('badgeAll');
+    const badgeMovies = document.getElementById('badgeMovies');
+    const badgeSeries = document.getElementById('badgeSeries');
+
+    // Modal Elements
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalClose = document.getElementById('modalClose');
+    const modalPoster = document.getElementById('modalPoster');
+    const modalTypeBadge = document.getElementById('modalTypeBadge');
+    const modalRatingBadge = document.getElementById('modalRatingBadge');
+    const modalYear = document.getElementById('modalYear');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDate = document.getElementById('modalDate');
+    const modalPlot = document.getElementById('modalPlot');
+    const modalGenre = document.getElementById('modalGenre');
+    const modalDuration = document.getElementById('modalDuration');
+    const modalRelease = document.getElementById('modalRelease');
+    const modalId = document.getElementById('modalId');
+
+    // Toast function
+    function showToast(msg, type = 'info') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = `toast show ${type}`;
+      setTimeout(() => {
+        toast.className = 'toast';
+      }, 4000);
+    }
+
+    // Load initial data
+    function loadData(dataset) {
+      if (!dataset) return;
+
+      const movies = (dataset.movies || []).map(m => ({ ...m, type: 'movie' }));
+      const series = (dataset.series || []).map(s => ({ ...s, type: 'series' }));
+
+      allItems = [...movies, ...series];
+
+      // Update counters
+      badgeAll.textContent = allItems.length;
+      badgeMovies.textContent = movies.length;
+      badgeSeries.textContent = series.length;
+
+      if (dataset.total_movies_server) {
+        statMoviesTotal.textContent = Number(dataset.total_movies_server).toLocaleString('pt-BR');
+      }
+      if (dataset.total_series_server) {
+        statSeriesTotal.textContent = Number(dataset.total_series_server).toLocaleString('pt-BR');
+      }
+
+      // Latest item date
+      const sortedByDate = [...allItems].sort((a, b) => (b.added_ts || 0) - (a.added_ts || 0));
+      if (sortedByDate.length > 0 && sortedByDate[0].added_date) {
+        statLatestDate.textContent = sortedByDate[0].added_date;
+      }
+
+      if (dataset.last_sync) {
+        const lastSyncElem = document.getElementById('statLastSync');
+        if (lastSyncElem) lastSyncElem.textContent = dataset.last_sync;
+      }
+
+      extractGenres();
+      render();
+    }
+
+    // Extract unique genres
+    function extractGenres() {
+      const genreSet = new Set();
+      allItems.forEach(item => {
+        if (item.genre) {
+          item.genre.split(',').forEach(g => {
+            const clean = g.trim();
+            if (clean && clean.length > 2) genreSet.add(clean);
+          });
+        }
+      });
+
+      // Clear except "Todos"
+      genresBar.innerHTML = '<button class="genre-chip active" data-genre="">Todos os Gêneros</button>';
+      Array.from(genreSet).sort().slice(0, 20).forEach(g => {
+        const btn = document.createElement('button');
+        btn.className = 'genre-chip';
+        btn.dataset.genre = g;
+        btn.textContent = g;
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.genre-chip').forEach(c => c.classList.remove('active'));
+          btn.classList.add('active');
+          activeGenre = g;
+          render();
+        });
+        genresBar.appendChild(btn);
+      });
+
+      // "Todos" click handler
+      genresBar.firstElementChild.addEventListener('click', function() {
+        document.querySelectorAll('.genre-chip').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        activeGenre = '';
+        render();
+      });
+    }
+
+    // Render items
+    function render() {
+      let filtered = allItems.filter(item => {
+        // Tab filter
+        if (activeFilter !== 'all' && item.type !== activeFilter) return false;
+        // Genre filter
+        if (activeGenre && (!item.genre || !item.genre.toLowerCase().includes(activeGenre.toLowerCase()))) return false;
+        // Search query
+        if (searchQuery) {
+          const q = searchQuery.toLowerCase();
+          const title = (item.name || '').toLowerCase();
+          const genre = (item.genre || '').toLowerCase();
+          const date = (item.added_date || '').toLowerCase();
+          if (!title.includes(q) && !genre.includes(q) && !date.includes(q)) return false;
+        }
+        return true;
+      });
+
+      // Sort
+      filtered.sort((a, b) => {
+        if (activeSort === 'date-desc') return (b.added_ts || 0) - (a.added_ts || 0);
+        if (activeSort === 'date-asc') return (a.added_ts || 0) - (b.added_ts || 0);
+        if (activeSort === 'rating-desc') return parseFloat(b.rating || 0) - parseFloat(a.rating || 0);
+        if (activeSort === 'title-asc') return (a.name || '').localeCompare(b.name || '');
+        return 0;
+      });
+
+      resultsCount.textContent = `Exibindo ${filtered.length} título(s)`;
+
+      if (filtered.length === 0) {
+        itemsGrid.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <h3>Nenhum título encontrado</h3>
+            <p>Tente ajustar a busca ou os filtros de tipo e categoria.</p>
+          </div>
+        `;
+        return;
+      }
+
+      itemsGrid.innerHTML = filtered.map(item => {
+        const isMovie = item.type === 'movie';
+        const typeLabel = isMovie ? 'Filme' : 'Série';
+        const typeClass = isMovie ? 'movie' : 'series';
+        const rating = item.rating ? Number(item.rating).toFixed(1) : 'N/A';
+        const dateStr = item.added_date || 'Data N/A';
+        const posterUrl = item.poster || '';
+        const genreStr = item.genre || 'Gênero não informado';
+
+        return `
+          <div class="card" onclick="openDetails('${item.id}', '${item.type}')">
+            <div class="poster-wrap">
+              <span class="badge-type ${typeClass}">${typeLabel}</span>
+              ${item.is_new ? `<span class="badge-new">NOVO</span>` : ''}
+              ${item.rating ? `<span class="badge-rating">⭐ ${rating}</span>` : ''}
+              
+              ${posterUrl ? 
+                `<img class="poster-img" src="${posterUrl}" alt="${item.name}" loading="lazy" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'poster-placeholder\\'><span>Sem Imagem</span></div>';">` :
+                `<div class="poster-placeholder"><span>Sem Imagem</span></div>`
+              }
+
+              <div class="date-badge" title="Data exata de adição no servidor">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                </svg>
+                <span>${dateStr}</span>
+              </div>
+            </div>
+
+            <div class="card-content">
+              <h3 class="card-title" title="${item.name}">${item.name}</h3>
+              <div class="card-meta">
+                <span class="genre-tag" title="${genreStr}">${genreStr}</span>
+                <span>${item.release_date ? item.release_date.substring(0, 4) : ''}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Open details modal
+    window.openDetails = function(id, type) {
+      const item = allItems.find(i => String(i.id) === String(id) && i.type === type);
+      if (!item) return;
+
+      modalTitle.textContent = item.name || 'Sem título';
+      modalDate.textContent = item.added_date || 'Desconhecida';
+      modalPlot.textContent = item.plot || 'Nenhuma sinopse disponível para este título.';
+      modalGenre.textContent = item.genre || 'Não informado';
+      modalRelease.textContent = item.release_date || 'N/A';
+      modalId.textContent = item.id || '--';
+
+      if (item.type === 'movie') {
+        modalTypeBadge.textContent = 'Filme';
+        modalTypeBadge.className = 'badge-type movie';
+        modalDuration.textContent = item.duration ? `${item.duration} min` : 'N/A';
+      } else {
+        modalTypeBadge.textContent = 'Série';
+        modalTypeBadge.className = 'badge-type series';
+        modalDuration.textContent = 'Múltiplos Episódios';
+      }
+
+      if (item.rating) {
+        modalRatingBadge.textContent = `⭐ ${Number(item.rating).toFixed(1)}`;
+        modalRatingBadge.style.display = 'inline-flex';
+      } else {
+        modalRatingBadge.style.display = 'none';
+      }
+
+      if (item.release_date) {
+        modalYear.textContent = `(${item.release_date.substring(0, 4)})`;
+      } else {
+        modalYear.textContent = '';
+      }
+
+      if (item.poster) {
+        modalPoster.src = item.poster;
+        modalPoster.style.display = 'block';
+      } else {
+        modalPoster.style.display = 'none';
+      }
+
+      modalOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+
+    function closeModal() {
+      modalOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Tab buttons event
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilter = btn.dataset.filter;
+        render();
+      });
+    });
+
+    // Search & Sort events
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value.trim();
+      render();
+    });
+
+    sortSelect.addEventListener('change', (e) => {
+      activeSort = e.target.value;
+      render();
+    });
+
+    // Sync button logic (hits server.py or reloads)
+    btnSync.addEventListener('click', async () => {
+      btnSync.classList.add('spinning');
+      syncText.textContent = 'Atualizando...';
+
+      try {
+        const response = await fetch('/api/refresh');
+        if (!response.ok) throw new Error('Servidor local não respondeu');
+        const res = await response.json();
+        if (res.success && res.data) {
+          loadData(res.data);
+          showToast('✅ Catálogo sincronizado com sucesso!', 'success');
+        } else {
+          throw new Error(res.error || 'Falha ao atualizar');
+        }
+      } catch (err) {
+        console.warn('Erro ao chamar /api/refresh:', err);
+        // Tenta carregar iptv_dados.json via fetch
+        try {
+          const resp = await fetch('iptv_dados.json?t=' + Date.now());
+          const json = await resp.json();
+          loadData(json);
+          showToast('Dados recarregados do arquivo local!', 'info');
+        } catch (e) {
+          showToast('Para sincronização ao vivo com o servidor IPTV, execute: python server.py', 'error');
+        }
+      } finally {
+        btnSync.classList.remove('spinning');
+        syncText.textContent = 'Sincronizar Servidor';
+      }
+    });
+
+    // Initialization
+    window.addEventListener('DOMContentLoaded', () => {
+      // 1. Verifica se temos IPTV_INITIAL_DATA (de data.js)
+      if (window.IPTV_INITIAL_DATA) {
+        loadData(window.IPTV_INITIAL_DATA);
+      } else {
+        // Tenta carregar iptv_dados.json
+        fetch('iptv_dados.json')
+          .then(r => r.json())
+          .then(data => loadData(data))
+          .catch(e => {
+            console.error('Falha ao carregar dados:', e);
+            showToast('Nenhum dado encontrado. Execute o script python para coletar.', 'error');
+          });
+      }
+    });
+  </script>
+</body>
+</html>
