@@ -1,0 +1,26 @@
+name: Atualizar Lista de Filmes Vidlink no Gist
+
+on:
+  schedule:
+    # Executa todos os dias às 06:00 UTC (03:00 da manhã no horário de Brasília)
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Permite testar clicando num botão no GitHub
+
+jobs:
+  update-gist:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Rodar script de atualização
+        run: node atualizar-gist.mjs
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+          GIST_ID: ${{ secrets.GIST_ID }}
