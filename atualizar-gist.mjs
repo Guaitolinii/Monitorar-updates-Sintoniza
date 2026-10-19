@@ -3,7 +3,7 @@ import { writeFileSync } from 'node:fs';
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 const GITHUB_TOKEN = process.env.GIST_TOKEN;
 const GIST_ID = process.env.GIST_ID;
-const NOME_ARQUIVO = 'filmes_vidlink.m3u';
+const NOME_ARQUIVO = 'filmes_listalegendados.m3u';
 const QUANTIDADE_PAGINAS = 100; // 100 páginas x 20 filmes = 2.000 filmes populares
 
 async function obterGeneros() {
