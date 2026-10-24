@@ -24,3 +24,4 @@ jobs:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
           GIST_ID: ${{ secrets.GIST_ID }}
+          PROXY_URL: ${{ secrets.PROXY_URL }}
